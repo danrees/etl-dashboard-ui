@@ -29,10 +29,15 @@
               <button @click="addParam">Add</button>
           </div>
       </div>
+      <div>
+        <button class="button" @click="saveParameter">Save</button>
+      </div>
     </div>
 </template>
 
-<<script>
+<script>
+import axios from 'axios'
+
 export default {
   name: 'create-etl',
   data () {
@@ -46,9 +51,19 @@ export default {
       this.etl.parameters.push(this.paramToAdd)
       this.paramToAdd = ''
     },
-    clearParams: function() {
+    clearParams: function () {
       console.log(this.etl)
       this.etl.parameters = []
+    },
+    saveParameter: function () {
+      axios.post('http://localhost:8002/api/etl', this.etl)
+      .then(response => {
+        console.log(response)
+        this.etl = {parameters: []}
+      })
+      .catch(e => {
+        console.error(e)
+      })
     }
   }
 }
